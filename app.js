@@ -2,21 +2,29 @@ import express from 'express';
 import path from 'path';
 import favicon from 'serve-favicon';
 import logger from 'morgan';
-// import cors from 'cors';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import jwt from 'express-jwt';
 
-import authConfig from './config/auth.config';
+import getAuthConfig from './config/auth.config';
 import index from './routes/index';
-import users from './routes/users'; 
+import todos from './routes/todos'; 
 
 const app = express();
-// if( !authConfig.bypass ) {
-//   app.use('/', jwt({ secret: authConfig.secret }))
-// }
+const authConfig = getAuthConfig();
 
-// app.use(cors());
+app.use(cors());
+app.use('/api',
+  jwt({
+    secret: authConfig.secret,
+    credentialsRequired: !authConfig.bypass
+  }),
+  (err, req, res, next) => {
+    if(err.name === 'UnauthorizedError')
+      return (res.status(401).send('Invalid authorization token'));
+  }
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,8 +38,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api', (req, res, next) => {
+
+  req.body.createdBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
+  req.body.updatedBy = (req.user && req.user._doc.login.username) ? req.user._doc.login.username : 'Ambiente de Test';
+  
+  next();
+})
+
 app.use('/', index);
-app.use('/users', users);
+app.use('/', todos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -39,6 +55,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -51,4 +68,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;
