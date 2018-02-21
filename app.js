@@ -1,14 +1,22 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+import express from 'express';
+import path from 'path';
+import favicon from 'serve-favicon';
+import logger from 'morgan';
+// import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import jwt from 'express-jwt';
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+import authConfig from './config/auth.config';
+import index from './routes/index';
+import users from './routes/users'; 
 
-var app = express();
+const app = express();
+// if( !authConfig.bypass ) {
+//   app.use('/', jwt({ secret: authConfig.secret }))
+// }
+
+// app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
