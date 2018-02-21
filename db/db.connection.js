@@ -1,15 +1,14 @@
 import mongoose from 'mongoose';
 import bluebird from 'bluebird';
 
-import dbConfig from '../config/db.config';
+import config from '../config/db.config';
 
-dbConfig = config();
+const dbConfig = config();
 
 let db = null;
 
 let options = { 
-  db: { native_parser: true },
-  server: { poolSize: 10 },
+  poolSize: 10,
   promiseLibrary: bluebird,
   user: dbConfig.username,
   pass: dbConfig.password,
