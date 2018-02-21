@@ -16,3 +16,5 @@ const config = getConfig({
       secret: "realponto"
   }
 });
+
+export default config

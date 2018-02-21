@@ -6,7 +6,7 @@ export const getAll = async(req, res, next) => {
     const todos = await Todo.find(req.query)
     res.json(todos)
   } catch(err) {
-    return err
+    next(err)
   } 
 }
 
@@ -20,7 +20,7 @@ export const getTodoById = async(req, res, next) => {
   }
 }
 
-export const saveTodo = async(req, res, next)=> {
+export const saveTodo = async(req, res, next) => {
   try{
     const todo = prop('body', req)
     const todoModel = new Todo(todo)
@@ -40,7 +40,7 @@ export const updateTodo = async(req, res, next) => {
         runValidators: true
       })
     res.json(todoUpdate)
-  } catch {
+  } catch(err) {
     next(err)
   }
 }

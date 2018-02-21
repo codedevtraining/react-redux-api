@@ -19,3 +19,5 @@ const config = getConfig({
       password: process.env.DB_PASSWORD
   }
 })
+
+export default config;
