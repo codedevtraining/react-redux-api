@@ -9,9 +9,9 @@ import {
 
 const router = express.Router();
 
-router.get('/todo', getAll);
-router.get('/todo:id', getTodoById);
-router.post('/todo', saveTodo);
-router.put('/todo:id', updateTodo);
+router.get('/', getAll);
+router.get('/:id', getTodoById);
+router.post('/', saveTodo);
+router.put('/:id', updateTodo);
 
 export default router;
